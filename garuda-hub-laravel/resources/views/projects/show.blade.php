@@ -5,11 +5,21 @@
     <title>Detail Proyek - {{ $project->title }}</title>
 </head>
 <body>
+    {{-- NIM: 252410102074 --}}
     <h1>{{ $project->title }}</h1>
-    <a href="{{ route('projects.index') }}">Kembali</a>
+    <a href="{{ route('projects.index') }}">Kembali ke Daftar</a> |
+    <a href="{{ route('projects.edit', $project) }}">Edit Proyek</a>
 
     @if(session('success'))
         <p style="color: green;">{{ session('success') }}</p>
+    @endif
+
+    @if($errors->any())
+        <ul style="color: red;">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
     @endif
 
     <p><strong>Pemilik:</strong> {{ $project->owner->name ?? '-' }}</p>
@@ -18,48 +28,42 @@
     <p><strong>Deskripsi:</strong><br>{{ $project->description }}</p>
 
     <hr>
-    <h2>Daftar Penawaran (Bids)</h2>
+    <h2>Kirim Penawaran (Bid)</h2>
+    <form action="{{ route('bids.store', $project) }}" method="POST">
+        @csrf
+
+        <p>
+            <label>Nominal Bid (Rp)</label><br>
+            <input type="number" step="0.01" name="amount" value="{{ old('amount') }}" required>
+        </p>
+
+        <p>
+            <label>Proposal</label><br>
+            <textarea name="proposal" rows="3">{{ old('proposal') }}</textarea>
+        </p>
+
+        <button type="submit">Kirim Bid</button>
+    </form>
+
+    <hr>
+    <h2>Daftar Bid ({{ $project->bids->count() }})</h2>
     <ul>
         @forelse($project->bids as $bid)
             <li>
                 <strong>{{ $bid->bidder->name ?? '-' }}</strong>
-                | Tawaran: Rp {{ number_format($bid->amount, 0, ',', '.') }}
-                | Status: {{ $bid->status }}
+                — Rp {{ number_format($bid->amount, 0, ',', '.') }}
                 @if($bid->proposal)
-                    <br>Proposal: {{ $bid->proposal }}
+                    <br>Catatan: {{ $bid->proposal }}
                 @endif
                 <form action="{{ route('bids.destroy', $bid) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
-                    <button type="submit">Hapus Bid</button>
+                    <button type="submit" onclick="return confirm('Hapus bid ini?')">Hapus</button>
                 </form>
             </li>
         @empty
             <li>Belum ada penawaran.</li>
         @endforelse
     </ul>
-
-    <h3>Ajukan Penawaran</h3>
-    <form action="{{ route('bids.store', $project) }}" method="POST">
-        @csrf
-        <p>
-            <label>Penawar (User)</label><br>
-            <select name="user_id" required>
-                <option value="">-- Pilih User --</option>
-                @foreach($users as $user)
-                    <option value="{{ $user->id }}">{{ $user->name }}</option>
-                @endforeach
-            </select>
-        </p>
-        <p>
-            <label>Nominal Tawaran (Rp)</label><br>
-            <input type="number" step="0.01" name="amount" required>
-        </p>
-        <p>
-            <label>Proposal</label><br>
-            <textarea name="proposal" rows="3"></textarea>
-        </p>
-        <button type="submit">Kirim Bid</button>
-    </form>
 </body>
 </html>

@@ -5,7 +5,16 @@
     <title>Garuda-Hub - Daftar Proyek</title>
 </head>
 <body>
+    {{-- NIM: 252410102074 --}}
     <h1>Garuda-Hub — Lelang Proyek IT Mahasiswa</h1>
+
+    <p>
+        Login sebagai: <strong>{{ auth()->user()->name ?? '-' }}</strong>
+        <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+            @csrf
+            <button type="submit">Logout</button>
+        </form>
+    </p>
 
     @if(session('success'))
         <p style="color: green;">{{ session('success') }}</p>

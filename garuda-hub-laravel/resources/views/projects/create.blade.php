@@ -5,6 +5,7 @@
     <title>Tambah Proyek</title>
 </head>
 <body>
+    {{-- NIM: 252410102074 --}}
     <h1>Tambah Proyek</h1>
     <a href="{{ route('projects.index') }}">Kembali</a>
 
@@ -18,17 +19,6 @@
 
     <form action="{{ route('projects.store') }}" method="POST">
         @csrf
-        <p>
-            <label>Pemilik Proyek (User)</label><br>
-            <select name="user_id" required>
-                <option value="">-- Pilih User --</option>
-                @foreach($users as $user)
-                    <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
-                        {{ $user->name }} ({{ $user->email }})
-                    </option>
-                @endforeach
-            </select>
-        </p>
         <p>
             <label>Judul Proyek</label><br>
             <input type="text" name="title" value="{{ old('title') }}" required>

@@ -23,12 +23,16 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'budget' => 'required|numeric|min:0',
             'status' => 'required|in:open,in_progress,closed',
         ]);
+
+        // Bersihkan tag HTML berbahaya sebelum disimpan (defense in depth selain output encoding Blade)
+        $validated['title'] = strip_tags($validated['title']);
+        $validated['description'] = strip_tags($validated['description']);
+        $validated['user_id'] = $request->user()->id;
 
         Project::create($validated);
 
