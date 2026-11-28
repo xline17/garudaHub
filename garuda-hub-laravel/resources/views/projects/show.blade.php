@@ -26,6 +26,7 @@
     <p><strong>Budget:</strong> Rp {{ number_format($project->budget, 0, ',', '.') }}</p>
     <p><strong>Status:</strong> {{ $project->status }}</p>
     <p><strong>Deskripsi:</strong><br>{{ $project->description }}</p>
+    <p><em>Catatan: Silakan ajukan penawaran sesuai anggaran proyek.</em></p>
 
     <hr>
     <h2>Kirim Penawaran (Bid)</h2>
