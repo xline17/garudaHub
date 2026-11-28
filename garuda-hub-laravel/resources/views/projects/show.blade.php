@@ -6,7 +6,8 @@
 </head>
 <body>
     {{-- NIM: 252410102074 --}}
-    <h1>{{ $project->title }}</h1>
+    <h1>{{ $project->title }} (Rating: {{ $project->rating ?? 'Belum ada' }}/5)</h1>
+    <p><strong>Deskripsi:</strong><br>{{ $project->description }}</p>
     <a href="{{ route('projects.index') }}">Kembali ke Daftar</a> |
     <a href="{{ route('projects.edit', $project) }}">Edit Proyek</a>
 
@@ -27,6 +28,20 @@
     <p><strong>Status:</strong> {{ $project->status }}</p>
     <p><strong>Deskripsi:</strong><br>{{ $project->description }}</p>
 
+    <hr>
+    <h3>Beri Rating Proyek</h3>
+    <form action="#" method="POST">
+        @csrf
+        <select name="rating">
+            <option value="5">5 - Sangat Bagus</option>
+            <option value="4">4 - Bagus</option>
+            <option value="3">3 - Cukup</option>
+            <option value="2">2 - Kurang</option>
+            <option value="1">1 - Buruk</option>
+        </select>
+        <button type="submit">Kirim Rating</button>
+    </form>
+    
     <hr>
     <h2>Kirim Penawaran (Bid)</h2>
     <form action="{{ route('bids.store', $project) }}" method="POST">
